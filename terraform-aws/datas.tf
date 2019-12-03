@@ -41,10 +41,10 @@ resource "aws_launch_configuration" "data" {
   # If the expression in the following list itself returns a list, remove the
   # brackets to avoid interpretation as a list of lists. If the expression
   # returns a single list item then leave it as-is and remove this TODO comment.
-  security_groups = [concat(
+  security_groups = flatten([concat(
     [aws_security_group.elasticsearch_security_group.id],
     var.additional_security_groups,
-  )]
+  )])
   associate_public_ip_address = false
   iam_instance_profile        = aws_iam_instance_profile.elasticsearch.id
   user_data                   = data.template_file.data_userdata_script.rendered
@@ -81,7 +81,7 @@ resource "aws_autoscaling_group" "data_nodes" {
   # If the expression in the following list itself returns a list, remove the
   # brackets to avoid interpretation as a list of lists. If the expression
   # returns a single list item then leave it as-is and remove this TODO comment.
-  vpc_zone_identifier = [coalescelist(var.cluster_subnet_ids, data.aws_subnet_ids.selected.ids)]
+  vpc_zone_identifier = flatten([coalescelist(var.cluster_subnet_ids, local.subnet_ids_list)])
 
   depends_on = [aws_autoscaling_group.master_nodes]
 

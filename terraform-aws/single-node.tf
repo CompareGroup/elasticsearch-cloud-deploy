@@ -66,7 +66,7 @@ resource "aws_autoscaling_group" "single_node" {
   force_delete         = true
   launch_configuration = aws_launch_configuration.single_node[0].id
 
-  vpc_zone_identifier = data.aws_subnet_ids.selected.ids
+  vpc_zone_identifier = local.subnet_ids_list
 
   tag {
     key                 = "Name"

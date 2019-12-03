@@ -6,6 +6,11 @@ data "aws_subnet_ids" "selected" {
   vpc_id = var.vpc_id
 }
 
+locals {
+  subnet_ids_string = join(",", data.aws_subnet_ids.selected.ids)
+  subnet_ids_list = split(",", local.subnet_ids_string)
+}
+
 resource "aws_security_group" "vpc-endpoint" {
   vpc_id = var.vpc_id
 
@@ -39,6 +44,6 @@ resource "aws_vpc_endpoint" "ec2" {
   # If the expression in the following list itself returns a list, remove the
   # brackets to avoid interpretation as a list of lists. If the expression
   # returns a single list item then leave it as-is and remove this TODO comment.
-  subnet_ids = [coalescelist(var.cluster_subnet_ids, data.aws_subnet_ids.selected.ids)]
+  subnet_ids = flatten([coalescelist(var.cluster_subnet_ids, local.subnet_ids_list)])
 }
 
