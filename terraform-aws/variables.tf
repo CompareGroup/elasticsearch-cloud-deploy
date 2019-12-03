@@ -3,6 +3,10 @@ variable "es_cluster" {
   description = "Name of the elasticsearch cluster, used in node discovery"
 }
 
+variable "user_secret_profile" {
+  type = string
+}
+
 variable "aws_region" {
   type = string
 }
