@@ -2,8 +2,9 @@
   "description": "Kibana Image",
   "builders": [
     {
+      "vpc_id": "vpc-31d72e54",
+      "subnet_id": "subnet-20c40857",
       "type": "amazon-ebs",
-
       "ami_name": "kibana7-{{isotime | clean_ami_name}}",
       "availability_zone": "{{user `aws_az`}}",
       "iam_instance_profile": "packer",
@@ -27,6 +28,7 @@
       "spot_price": "auto",
       "ssh_timeout": "10m",
       "ssh_username": "ubuntu",
+      "ssh_interface": "public_ip",
       "tags": {
         "ImageType": "kibana7-packer-image"
       }

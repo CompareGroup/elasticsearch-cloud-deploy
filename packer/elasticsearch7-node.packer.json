@@ -2,6 +2,8 @@
   "description": "Elasticsarch Image",
   "builders": [
     {
+      "vpc_id": "vpc-31d72e54",
+      "subnet_id": "subnet-20c40857",
       "type": "amazon-ebs",
       "ami_name": "elasticsearch7-{{isotime | clean_ami_name}}",
       "availability_zone": "{{user `aws_az`}}",
@@ -22,6 +24,7 @@
       },
       "ssh_timeout": "10m",
       "ssh_username": "ubuntu",
+      "ssh_interface": "public_ip",
       "tags": {
         "ImageType": "elasticsearch7-packer-image"
       },
