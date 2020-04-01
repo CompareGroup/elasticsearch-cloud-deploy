@@ -69,14 +69,6 @@ resource "aws_launch_configuration" "master" {
   name_prefix   = "elasticsearch-${var.es_cluster}-master-nodes"
   image_id      = data.aws_ami.elasticsearch.id
   instance_type = var.master_instance_type
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibility in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
   security_groups = flatten([concat(
     [aws_security_group.elasticsearch_security_group.id],
     var.additional_security_groups,
@@ -105,15 +97,6 @@ resource "aws_autoscaling_group" "master_nodes" {
   default_cooldown     = 30
   force_delete         = true
   launch_configuration = aws_launch_configuration.master.id
-
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibility in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
   vpc_zone_identifier = flatten([coalescelist(var.cluster_subnet_ids, local.subnet_ids_list)])
 
   tag {
@@ -152,18 +135,10 @@ resource "aws_instance" "bootstrap_node" {
   ami                                  = data.aws_ami.elasticsearch.id
   instance_type                        = var.master_instance_type
   instance_initiated_shutdown_behavior = "terminate"
-  # TF-UPGRADE-TODO: In Terraform v0.10 and earlier, it was sometimes necessary to
-  # force an interpolation expression to be interpreted as a list by wrapping it
-  # in an extra set of list brackets. That form was supported for compatibility in
-  # v0.11, but is no longer supported in Terraform v0.12.
-  #
-  # If the expression in the following list itself returns a list, remove the
-  # brackets to avoid interpretation as a list of lists. If the expression
-  # returns a single list item then leave it as-is and remove this TODO comment.
-  vpc_security_group_ids = [concat(
+  vpc_security_group_ids = flatten([concat(
     [aws_security_group.elasticsearch_security_group.id],
     var.additional_security_groups,
-  )]
+  )])
   iam_instance_profile = aws_iam_instance_profile.elasticsearch.id
   user_data            = data.template_file.bootstrap_userdata_script.rendered
   key_name             = var.key_name

@@ -105,11 +105,19 @@ resource "aws_elb" "es_client_lb" {
 
   name            = format("%s-client-lb", var.es_cluster)
   security_groups = [aws_security_group.elasticsearch_clients_security_group.id]
-  subnets = [coalescelist(
+  subnets = flatten([coalescelist(
     var.clients_subnet_ids,
-    local.subnet_ids_list[0],
-  )]
+    local.subnet_ids_list,
+  )])
   internal = var.public_facing == "true" ? "false" : "true"
+//  load_balancer_type = "application"
+//  enable_deletion_protection = true
+
+//  access_logs {
+//    bucket  = var.s3_backup_bucket
+//    prefix  = "test-lb"
+//    enabled = true
+//  }
 
   cross_zone_load_balancing   = true
   idle_timeout                = 400

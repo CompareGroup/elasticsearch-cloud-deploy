@@ -1,6 +1,6 @@
 {
   "elasticsearch_version": "",
-
+  "aws_profile": "sol",
   "aws_region": "eu-west-1",
   "aws_az": "eu-west-1b",
 

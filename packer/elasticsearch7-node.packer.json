@@ -2,14 +2,13 @@
   "description": "Elasticsarch Image",
   "builders": [
     {
-      "vpc_id": "vpc-31d72e54",
-      "subnet_id": "subnet-20c40857",
       "type": "amazon-ebs",
       "ami_name": "elasticsearch7-{{isotime | clean_ami_name}}",
       "availability_zone": "{{user `aws_az`}}",
       "iam_instance_profile": "packer",
       "instance_type": "t2.micro",
       "region": "{{user `aws_region`}}",
+      "profile": "{{user `aws_profile`}}",
       "run_tags": {
         "role": "packer"
       },
